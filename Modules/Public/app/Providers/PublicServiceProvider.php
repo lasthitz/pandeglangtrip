@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Public\app\Providers;
+namespace Modules\Public\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -12,8 +12,12 @@ class PublicServiceProvider extends ServiceProvider
     }
 
     public function boot(): void
-{
-    $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
-}
+    {
+        $this->loadRoutesFrom(module_path('Public', 'routes/web.php'));
 
+        $this->loadViewsFrom(
+            module_path('Public', 'resources/views'),
+            'public'
+        );
+    }
 }
