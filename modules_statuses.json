@@ -1,0 +1,8 @@
+{
+  "Public": true,
+  "Tickets": true,
+  "Tours": true,
+  "Bookings": true,
+  "Reviews": true,
+  "Admin": true
+}
