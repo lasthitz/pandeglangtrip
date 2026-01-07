@@ -1,0 +1,36 @@
+/* PandeglangTrip — T4 minor polish (max 50 lines) */
+
+.panel-wrapper {
+  min-height: calc(100vh - 56px);
+}
+
+.panel-sidebar {
+  width: 260px;
+  flex: 0 0 260px;
+}
+
+@media (max-width: 992px) {
+  .panel-sidebar {
+    width: 220px;
+    flex-basis: 220px;
+  }
+}
+
+.list-group-item {
+  border-radius: 0;
+}
+
+.navbar .btn {
+  white-space: nowrap;
+}
+
+/* Make content spacing consistent */
+.container, .container-fluid {
+  --pt-gap: 1.25rem;
+}
+
+main .container,
+main .container-fluid {
+  padding-top: var(--pt-gap);
+  padding-bottom: var(--pt-gap);
+}
