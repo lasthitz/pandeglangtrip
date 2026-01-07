@@ -11,7 +11,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+
+        // === T3: Role Middleware Aliases ===
+        $middleware->alias([
+            'admin.only' => \App\Http\Middleware\AdminOnly::class,
+            'pengelola.only' => \App\Http\Middleware\PengelolaOnly::class,
+            'user.only' => \App\Http\Middleware\UserOnly::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
