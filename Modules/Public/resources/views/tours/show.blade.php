@@ -53,6 +53,40 @@
   </div>
 @endif
 
+{{-- ===================== --}}
+{{-- T10 — Guide + Itinerary + Image (Read-only Public) --}}
+{{-- ===================== --}}
+
+@if(!empty($tour->image_path))
+  <div class="card mb-3">
+    <div class="card-body">
+      <img
+        src="{{ asset('storage/' . $tour->image_path) }}"
+        class="img-fluid rounded"
+        alt="Tour Image">
+    </div>
+  </div>
+@endif
+
+@if(!empty($tour->guide_name))
+  <div class="card mb-3">
+    <div class="card-body">
+      <h2 class="h6 mb-2">Guide</h2>
+      <div>{{ $tour->guide_name }}</div>
+    </div>
+  </div>
+@endif
+
+@if(!empty($tour->itinerary))
+  <div class="card mb-3">
+    <div class="card-body">
+      <h2 class="h6 mb-2">Itinerary</h2>
+      <div class="text-muted small">Read-only</div>
+      <div class="mt-2">{!! nl2br(e($tour->itinerary)) !!}</div>
+    </div>
+  </div>
+@endif
+
 <div class="card">
   <div class="card-body">
     <h2 class="h5 mb-3">Pesan Tour</h2>
