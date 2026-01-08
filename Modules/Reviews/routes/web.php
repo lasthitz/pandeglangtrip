@@ -1,9 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Reviews\app\Http\Controllers\ReviewController;
 
-Route::middleware('web')->group(function () {
-    Route::get('/reviews/test', function () {
-        return 'Reviews module OK';
-    })->name('reviews.test');
+Route::middleware(['web', 'auth'])->group(function () {
+    // {type} = ticket | tour
+    Route::post('/reviews/{type}/{id}', [ReviewController::class, 'store'])
+        ->whereIn('type', ['ticket', 'tour'])
+        ->whereNumber('id')
+        ->name('reviews.store');
 });

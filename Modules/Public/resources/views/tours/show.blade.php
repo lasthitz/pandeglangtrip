@@ -7,11 +7,9 @@
   $isLoggedIn = auth()->check();
   $isUserRole = $isLoggedIn && (auth()->user()->role === 'user');
 
-  // Tanggal berdasarkan kolom yang bener dari migration/model lu
   $startDate = $tour->start_date ?? null;
   $endDate   = $tour->end_date ?? null;
 
-  // Rule sederhana: kalau start_date ada dan sudah lewat → disable booking
   $isDateAvailable = true;
   try {
     if ($startDate) {
@@ -22,7 +20,6 @@
     $isDateAvailable = true;
   }
 
-  // Harga tour per orang
   $pricePerPerson = (int) ($tour->price_per_person ?? 0);
 @endphp
 
@@ -32,7 +29,6 @@
   <div class="text-muted d-flex flex-wrap gap-2 align-items-center">
     <span>
       Rp {{ number_format($tour->price_per_person ?? 0, 0, ',', '.') }} / orang
-
     </span>
 
     @if($startDate)
@@ -120,4 +116,94 @@
     @endif
   </div>
 </div>
+
+{{-- ===================== --}}
+{{-- T7 — Review Section   --}}
+{{-- ===================== --}}
+@php
+  use App\Models\Booking;
+  use App\Models\Tour;
+
+  $user = auth()->user();
+
+  $canReview = false;
+  if ($user) {
+    $canReview = Booking::query()
+      ->where('user_id', $user->id)
+      ->where('status', 'PAID')
+      ->where('bookable_type', Tour::class)
+      ->where('bookable_id', $tour->id)
+      ->exists();
+  }
+
+  $reviews = $tour->reviews()->with('user')->latest()->get();
+@endphp
+
+<hr class="my-4">
+
+<h5 class="mb-3">Ulasan</h5>
+
+@if($reviews->count() === 0)
+  <p class="text-muted mb-0">Belum ada ulasan.</p>
+@else
+  <div class="d-flex flex-column gap-3">
+    @foreach($reviews as $r)
+      <div class="border rounded p-3">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <strong>{{ $r->user->name ?? $r->user->email }}</strong>
+            <div class="small text-muted">{{ $r->created_at?->format('d M Y H:i') }}</div>
+          </div>
+          <span class="badge bg-secondary">Rating: {{ $r->rating }}/5</span>
+        </div>
+
+        <div class="mt-2">
+          {{ $r->comment }}
+        </div>
+      </div>
+    @endforeach
+  </div>
+@endif
+
+@if(auth()->check() && $canReview)
+  <hr class="my-4">
+
+  <h6 class="mb-2">Tulis Ulasan</h6>
+
+  @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+  @endif
+
+  @if($errors->any())
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        @foreach($errors->all() as $e)
+          <li>{{ $e }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
+  <form method="POST" action="{{ route('reviews.store', ['type' => 'tour', 'id' => $tour->id]) }}">
+    @csrf
+
+    <div class="mb-2">
+      <label class="form-label">Rating</label>
+      <select name="rating" class="form-select" required>
+        <option value="">-- pilih --</option>
+        @for($i=1; $i<=5; $i++)
+          <option value="{{ $i }}" {{ old('rating') == $i ? 'selected' : '' }}>{{ $i }}</option>
+        @endfor
+      </select>
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label">Komentar</label>
+      <textarea name="comment" class="form-control" rows="3" required>{{ old('comment') }}</textarea>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Kirim Ulasan</button>
+  </form>
+@endif
+
 @endsection

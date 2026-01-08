@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Modules\Reviews\app\Models\Review;
 
 class Ticket extends Model
 {
@@ -31,5 +33,11 @@ class Ticket extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', 1);
+    }
+
+    // T7: Reviews (polymorphic)
+    public function reviews(): MorphMany
+    {
+        return $this->morphMany(Review::class, 'reviewable')->latest();
     }
 }
