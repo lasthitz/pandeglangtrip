@@ -3,11 +3,6 @@
 @section('content')
 <div class="container py-4">
 
-  {{-- Debug (optional). Kalau mau hilangin, boleh hapus blok ini. --}}
-  <div class="alert alert-info">
-    auth()->check(): <b>{{ auth()->check() ? 'true' : 'false' }}</b> |
-    session()->getId(): <b>{{ session()->getId() }}</b>
-  </div>
 
   <div class="mb-3">
     <h3 class="mb-1">{{ $ticket->name ?? $ticket->title ?? $ticket->nama ?? 'Detail Ticket' }}</h3>
@@ -23,6 +18,21 @@
       </div>
     </div>
   </div>
+
+{{-- Image (public detail) --}}
+<div class="card mb-3">
+  <div class="card-body">
+    @if(!empty($ticket->image_path))
+      <img
+        src="{{ asset('storage/'.$ticket->image_path) }}"
+        class="img-fluid rounded"
+        alt="{{ $ticket->name }}"
+      >
+    @else
+      <div class="text-muted">No Image</div>
+    @endif
+  </div>
+</div>
 
   {{-- CTA Booking (T6) --}}
   @php
