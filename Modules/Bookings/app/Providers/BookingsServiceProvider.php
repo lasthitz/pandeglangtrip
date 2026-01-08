@@ -12,8 +12,11 @@ class BookingsServiceProvider extends ServiceProvider
     }
 
     public function boot(): void
-{
-    $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
-}
+    {
+        // Load module routes
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
 
+        // Register views namespace: bookings::*
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'bookings');
+    }
 }
