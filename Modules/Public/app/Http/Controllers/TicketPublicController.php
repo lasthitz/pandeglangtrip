@@ -17,5 +17,6 @@ class TicketPublicController extends Controller
             ->firstOrFail();
 
         return view('public::tickets.show', compact('ticket'));
+
     }
 }

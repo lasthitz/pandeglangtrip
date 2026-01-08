@@ -8,14 +8,10 @@ use Illuminate\Routing\Controller;
 
 class TourPublicController extends Controller
 {
-    public function show(Request $request, $tour)
-    {
-        $tour = Tour::query()
-            ->whereKey($tour)
-            ->where('approval_status', 'APPROVED')
-            ->where('is_active', 1)
-            ->firstOrFail();
+        public function show(Request $request, Tour $tour)
+{
+    abort_unless($tour->approval_status === 'APPROVED' && $tour->is_active, 404);
+    return view('public::tours.show', compact('tour'));
+}
 
-        return view('public::tours.show', compact('tour'));
-    }
 }

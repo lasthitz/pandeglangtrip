@@ -20,15 +20,21 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        $role = Auth::user()->role ?? 'user';
+        $user = Auth::user();
 
-        $target = match ($role) {
-            'admin' => '/admin',
+        // Default redirect by role
+        $defaultTarget = match ($user->role ?? 'user') {
+            'admin'     => '/admin',
             'pengelola' => '/panel',
-            default => '/dashboard', // paling aman & sederhana (Breeze)
+            default     => '/dashboard',
         };
 
-        return redirect()->intended($target);
+        /**
+         * PENTING:
+         * - Kalau ada intended URL (misal dari /tickets/1 atau /tours/1)
+         * - Laravel akan otomatis redirect ke sana
+         */
+        return redirect()->intended($defaultTarget);
     }
 
     public function destroy(Request $request): RedirectResponse

@@ -1,59 +1,98 @@
 @extends('layouts.public')
 
-@section('title', 'Detail Ticket')
+<div class="alert alert-info">
+  auth()->check(): <b>{{ auth()->check() ? 'true' : 'false' }}</b> |
+  session()->getId(): <b>{{ session()->getId() }}</b>
+</div>
+
 
 @section('content')
 <div class="container py-4">
-    <div class="mb-3">
-        <a href="{{ route('public.home') }}" class="btn btn-outline-secondary btn-sm">&larr; Kembali</a>
+
+  <div class="mb-3">
+    <h3 class="mb-1">{{ $ticket->name ?? $ticket->title ?? $ticket->nama ?? 'Detail Ticket' }}</h3>
+    <div class="text-muted">
+      Rp {{ number_format((int)($ticket->price ?? $ticket->harga ?? 0), 0, ',', '.') }}
     </div>
+  </div>
 
-    <div class="row g-4">
-        <div class="col-12 col-lg-6">
-            <div class="card shadow-sm">
-                @if($ticket->image_path)
-                    <img src="{{ asset($ticket->image_path) }}" class="card-img-top" alt="{{ $ticket->name }}">
-                @else
-                    <div class="ratio ratio-16x9 bg-body-tertiary d-flex align-items-center justify-content-center">
-                        <span class="text-secondary small">No Image</span>
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="col-12 col-lg-6">
-            <div class="d-flex gap-2 flex-wrap mb-2">
-                <span class="badge text-bg-primary">Ticket</span>
-                @if(is_null($ticket->visit_date))
-                    <span class="badge text-bg-warning">Tanggal belum tersedia</span>
-                @else
-                    <span class="badge text-bg-light border">{{ $ticket->visit_date->format('d M Y') }}</span>
-                @endif
-            </div>
-
-            <h1 class="h4 mb-2">{{ $ticket->name }}</h1>
-            <div class="h5 mb-3">Rp {{ number_format($ticket->price, 0, ',', '.') }}</div>
-
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h2 class="h6">Deskripsi</h2>
-                    <p class="text-secondary mb-0">{{ $ticket->description }}</p>
-
-                    <hr>
-
-                    <h2 class="h6">Tanggal Kunjungan</h2>
-                    @if(is_null($ticket->visit_date))
-                        <p class="text-secondary mb-0">Belum tersedia.</p>
-                    @else
-                        <p class="text-secondary mb-0">{{ $ticket->visit_date->format('d M Y') }}</p>
-                    @endif
-
-                    <div class="mt-3">
-                        <button class="btn btn-primary" disabled>Pesan (soon)</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="text-muted">
+        {{ $ticket->description ?? $ticket->deskripsi ?? '-' }}
+      </div>
     </div>
+  </div>
+
+  {{-- CTA Booking (T6) --}}
+  @php
+    $isLoggedIn = auth()->check();
+    $isUserRole = $isLoggedIn && (auth()->user()->role === 'user');
+
+    $availableDate = $ticket->available_date ?? null;
+    $isDateAvailable = true;
+
+    if ($availableDate) {
+      try {
+        $isDateAvailable = \Carbon\Carbon::parse($availableDate)->startOfDay()
+          ->greaterThanOrEqualTo(now()->startOfDay());
+      } catch (\Throwable $e) {
+        $isDateAvailable = true;
+      }
+    }
+  @endphp
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="mb-3">Pesan Ticket</h5>
+
+      @if(!$isLoggedIn)
+       <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">
+  Login untuk Pesan
+</a>
+      @elseif(!$isUserRole)
+        <div class="alert alert-warning mb-0">Booking hanya untuk role <b>user</b>.</div>
+      @else
+        @if(!$isDateAvailable)
+          <button class="btn btn-secondary" disabled>Tidak tersedia (tanggal lewat)</button>
+        @else
+          <form method="POST" action="{{ url('/booking/ticket/' . $ticket->id) }}" class="row g-2 align-items-end">
+            @csrf
+
+            <div class="col-12 col-md-3">
+              <label class="form-label">Qty</label>
+              <input type="number" name="qty" class="form-control" min="1" value="1" required>
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label">Metode Pembayaran</label>
+              <select name="payment_method" class="form-select" required>
+                <option value="QRIS">QRIS</option>
+                <option value="DANA">DANA</option>
+                <option value="OVO">OVO</option>
+                <option value="GOPAY">GOPAY</option>
+                <option value="TRANSFER_BANK">TRANSFER BANK</option>
+              </select>
+            </div>
+
+            <div class="col-12 col-md-5">
+              <button class="btn btn-primary w-100" type="submit">Pesan (Dummy PAID)</button>
+            </div>
+          </form>
+
+          @if ($errors->any())
+            <div class="alert alert-danger mt-3 mb-0">
+              <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
+        @endif
+      @endif
+    </div>
+  </div>
+
 </div>
 @endsection
