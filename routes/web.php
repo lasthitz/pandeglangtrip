@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Account\AccountPasswordController;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -21,6 +21,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/account', function () {
         return view('account.index');
     })->middleware('user.only');
+});
+
+// === T13: Account password change (ALL ROLES, self account only) ===
+Route::middleware('auth')->group(function () {
+    Route::get('/account/password', [AccountPasswordController::class, 'edit'])
+        ->name('account.password.edit');
+
+    Route::put('/account/password', [AccountPasswordController::class, 'update'])
+        ->name('account.password.update');
 });
 
 Route::middleware('auth')->group(function () {
