@@ -10,7 +10,7 @@
     </div>
 
     {{-- TICKETS --}}
-    <div class="mt-4">
+    <div class="mt-4" id="tickets">
         <div class="d-flex align-items-center justify-content-between mb-2">
             <h2 class="h5 mb-0">Tickets</h2>
             <span class="badge text-bg-secondary">Ticket</span>
@@ -21,13 +21,24 @@
         @else
             <div class="row g-3">
                 @foreach($tickets as $ticket)
+                    @php
+                        // source of truth: image_path (T9 upload)
+                        $ticketImg = !empty($ticket->image_path) ? asset('storage/' . $ticket->image_path) : null;
+                    @endphp
+
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card h-100 shadow-sm">
-                            @if($ticket->image_path)
-                                <img src="{{ asset($ticket->image_path) }}" class="card-img-top" alt="{{ $ticket->name }}">
+                            {{-- Image / Placeholder (konsisten tinggi) --}}
+                            @if($ticketImg)
+                                <img
+                                    src="{{ $ticketImg }}"
+                                    class="card-img-top"
+                                    alt="{{ $ticket->name }}"
+                                    style="height: 180px; object-fit: cover;"
+                                >
                             @else
-                                <div class="ratio ratio-16x9 bg-body-tertiary d-flex align-items-center justify-content-center">
-                                    <span class="text-secondary small">No Image</span>
+                                <div class="pt-img-placeholder" style="height: 180px;">
+                                    No Image
                                 </div>
                             @endif
 
@@ -58,7 +69,6 @@
                                         Lihat Detail
                                     </a>
 
-                                    <button class="btn btn-primary btn-sm" disabled>Pesan (soon)</button>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +79,7 @@
     </div>
 
     {{-- TOURS --}}
-    <div class="mt-5">
+    <div class="mt-5" id="tours">
         <div class="d-flex align-items-center justify-content-between mb-2">
             <h2 class="h5 mb-0">Tours</h2>
             <span class="badge text-bg-secondary">Tour</span>
@@ -80,13 +90,24 @@
         @else
             <div class="row g-3">
                 @foreach($tours as $tour)
+                    @php
+                        // source of truth: image_path (T10 upload)
+                        $tourImg = !empty($tour->image_path) ? asset('storage/' . $tour->image_path) : null;
+                    @endphp
+
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card h-100 shadow-sm">
-                            @if($tour->image_path)
-                                <img src="{{ asset($tour->image_path) }}" class="card-img-top" alt="{{ $tour->name }}">
+                            {{-- Image / Placeholder (konsisten tinggi) --}}
+                            @if($tourImg)
+                                <img
+                                    src="{{ $tourImg }}"
+                                    class="card-img-top"
+                                    alt="{{ $tour->name }}"
+                                    style="height: 180px; object-fit: cover;"
+                                >
                             @else
-                                <div class="ratio ratio-16x9 bg-body-tertiary d-flex align-items-center justify-content-center">
-                                    <span class="text-secondary small">No Image</span>
+                                <div class="pt-img-placeholder" style="height: 180px;">
+                                    No Image
                                 </div>
                             @endif
 
@@ -117,7 +138,7 @@
                                         Lihat Detail
                                     </a>
 
-                                    <button class="btn btn-success btn-sm" disabled>Pesan (soon)</button>
+                                    
                                 </div>
                             </div>
                         </div>

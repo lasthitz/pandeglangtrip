@@ -3,7 +3,6 @@
 @section('content')
 <div class="container py-4">
 
-
   <div class="mb-3">
     <h3 class="mb-1">{{ $ticket->name ?? $ticket->title ?? $ticket->nama ?? 'Detail Ticket' }}</h3>
     <div class="text-muted">
@@ -19,20 +18,28 @@
     </div>
   </div>
 
-{{-- Image (public detail) --}}
-<div class="card mb-3">
-  <div class="card-body">
-    @if(!empty($ticket->image_path))
-      <img
-        src="{{ asset('storage/'.$ticket->image_path) }}"
-        class="img-fluid rounded"
-        alt="{{ $ticket->name }}"
-      >
-    @else
-      <div class="text-muted">No Image</div>
-    @endif
+  {{-- Image (public detail) --}}
+  @php
+    // source of truth: image_path (T9 upload)
+    $img = !empty($ticket->image_path) ? asset('storage/' . $ticket->image_path) : null;
+  @endphp
+
+  <div class="card mb-3">
+    <div class="card-body">
+      @if($img)
+        <img
+          src="{{ $img }}"
+          alt="{{ $ticket->name }}"
+          class="img-thumbnail w-100"
+          style="height: 280px; object-fit: cover;"
+        >
+      @else
+        <div class="pt-img-placeholder" style="height: 280px;">
+          No Image
+        </div>
+      @endif
+    </div>
   </div>
-</div>
 
   {{-- CTA Booking (T6) --}}
   @php
@@ -86,7 +93,7 @@
             </div>
 
             <div class="col-12 col-md-5">
-              <button class="btn btn-primary w-100" type="submit">Pesan (Dummy PAID)</button>
+              <button class="btn btn-primary w-100" type="submit">Pesan</button>
             </div>
           </form>
 

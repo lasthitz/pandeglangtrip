@@ -21,6 +21,9 @@
   }
 
   $pricePerPerson = (int) ($tour->price_per_person ?? 0);
+
+  // source of truth: image_path (T10 upload)
+  $img = !empty($tour->image_path) ? asset('storage/' . $tour->image_path) : null;
 @endphp
 
 <div class="mb-3">
@@ -57,19 +60,21 @@
 {{-- T10 — Guide + Itinerary + Image (Read-only Public) --}}
 {{-- ===================== --}}
 
-@if(!empty($tour->image_path))
-  <div class="card mb-3">
-    <div class="card-body">
-      <img
-        src="{{ asset('storage/' . $tour->image_path) }}"
-        class="img-fluid rounded"
-        alt="Tour Image">
-    </div>
+@if($img)
+  <img
+    src="{{ $img }}"
+    alt="{{ $tour->name }}"
+    class="img-thumbnail w-100"
+    style="height: 280px; object-fit: cover;"
+  >
+@else
+  <div class="pt-img-placeholder" style="height: 280px;">
+    No Image
   </div>
 @endif
 
 @if(!empty($tour->guide_name))
-  <div class="card mb-3">
+  <div class="card mb-3 mt-3">
     <div class="card-body">
       <h2 class="h6 mb-2">Guide</h2>
       <div>{{ $tour->guide_name }}</div>
@@ -132,7 +137,7 @@
 
           <div class="col-12 col-md-5">
             <button class="btn btn-primary w-100" type="submit">
-              Pesan (Dummy PAID)
+              Pesan
             </button>
           </div>
         </form>

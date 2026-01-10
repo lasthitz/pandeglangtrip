@@ -13,6 +13,14 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
+@php
+    $role = strtolower(auth()->user()?->role ?? '');
+    $isUser = auth()->check() && $role === 'user';
+    $isPengelola = auth()->check() && $role === 'pengelola';
+    $isAdmin     = auth()->check() && $role === 'admin';
+
+@endphp
+
 <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
     <div class="container">
         <a class="navbar-brand fw-semibold" href="{{ url('/') }}">PandeglangTrip</a>
@@ -23,33 +31,133 @@
         </button>
 
         <div class="collapse navbar-collapse" id="publicNavbar">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/') }}">Home</a>
+                    <a class="nav-link {{ request()->is('/') ? 'active fw-semibold' : '' }}" href="{{ url('/') }}">
+                        Home
+                    </a>
                 </li>
+
+                {{-- Anchor: aman dari page mana pun --}}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/#tickets') }}">Tickets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/#tours') }}">Tours</a>
+                </li>
+                 @if($isUser)
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('my-bookings*') ? 'active fw-semibold' : '' }}"
+               href="{{ url('/my-bookings') }}">
+                My Bookings
+            </a>
+        </li>
+    @endif
             </ul>
 
             <div class="d-flex gap-2 align-items-center">
-                {{-- Theme toggle --}}
-                <button id="themeToggle" type="button" class="btn btn-outline-primary btn-sm"
-                        aria-label="Toggle theme">
-                    <span id="themeToggleText">Dark</span>
+    {{-- Theme toggle --}}
+    <button id="themeToggle" type="button" class="btn btn-outline-primary btn-sm" aria-label="Toggle theme">
+        <span id="themeToggleText">Dark</span>
+    </button>
+
+    @guest
+        <a class="btn btn-outline-secondary btn-sm" href="{{ route('login') }}">Login</a>
+        <a class="btn btn-primary btn-sm" href="{{ route('register') }}">Register</a>
+    @endguest
+
+    @auth
+        {{-- ADMIN / PENGELOLA: dashboard button + logout --}}
+        @if($isAdmin)
+            <a class="btn btn-outline-warning btn-sm" href="{{ url('/admin/tickets') }}">
+                Admin Dashboard
+            </a>
+
+            <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+            </form>
+
+        @elseif($isPengelola)
+            <a class="btn btn-outline-info btn-sm" href="{{ url('/panel/dashboard') }}">
+                Dashboard Pengelola
+            </a>
+
+            <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+            </form>
+
+        @elseif($isUser)
+            {{-- USER: dropdown nama + change password + logout --}}
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    {{ auth()->user()->name }}
                 </button>
 
-                {{-- Auth links (no scope change: hanya UI link sederhana) --}}
-                @auth
-                    <a class="btn btn-primary btn-sm" href="{{ url('/dashboard') }}">Dashboard</a>
-                @else
-                    <a class="btn btn-outline-secondary btn-sm" href="{{ route('login') }}">Login</a>
-                    <a class="btn btn-primary btn-sm" href="{{ route('register') }}">Register</a>
-                @endauth
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li class="px-3 py-2">
+                        <div class="fw-semibold">{{ auth()->user()->name }}</div>
+                        <div class="text-muted small">{{ auth()->user()->email }}</div>
+                    </li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li>
+                        <a class="dropdown-item" href="{{ route('account.password.edit') }}">
+                            Change Password
+                        </a>
+                    </li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item text-danger">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
             </div>
-        </div>
-    </div>
+
+        @else
+            {{-- fallback kalau ada role lain --}}
+            <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+            </form>
+        @endif
+    @endauth
+</div>
+
 </nav>
 
 <main class="flex-grow-1">
     <div class="container py-4">
+        {{-- optional polish: status/error tanpa nambah fitur --}}
+        @if (session('status'))
+            <div class="alert alert-success d-flex align-items-center gap-2" role="alert">
+                <span class="badge text-bg-success">OK</span>
+                <div class="mb-0">{{ session('status') }}</div>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger" role="alert">
+                <div class="fw-semibold mb-1">Terjadi error:</div>
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         @yield('content')
     </div>
 </main>
