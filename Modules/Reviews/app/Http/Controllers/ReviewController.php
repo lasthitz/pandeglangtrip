@@ -36,7 +36,7 @@ class ReviewController extends Controller
         $hasBooked = Booking::query()
             ->where('user_id', $user->id)
             ->where('status', 'PAID')
-            ->where('bookable_type', $reviewableClass) // FQCN (Ticket::class / Tour::class)
+            ->where('bookable_type', $reviewableClass) // Ticket::class / Tour::class
             ->where('bookable_id', $reviewable->id)
             ->exists();
 
@@ -44,14 +44,23 @@ class ReviewController extends Controller
             abort(403, 'You are not allowed to review this item.');
         }
 
-        Review::create([
-            'user_id'         => $user->id,
-            'reviewable_type' => $reviewableClass,
-            'reviewable_id'   => $reviewable->id,
-            'rating'          => (int) $validated['rating'],
-            'comment'         => $validated['comment'],
-        ]);
+        /**
+         * 1 akun = 1 ulasan per item:
+         * - kalau belum ada => create
+         * - kalau sudah ada => update (replace rating + comment)
+         */
+        Review::updateOrCreate(
+            [
+                'user_id'         => $user->id,
+                'reviewable_type' => $reviewableClass,
+                'reviewable_id'   => $reviewable->id,
+            ],
+            [
+                'rating'  => (int) $validated['rating'],
+                'comment' => $validated['comment'],
+            ]
+        );
 
-        return back()->with('success', 'Review berhasil dikirim.');
+        return back()->with('success', 'Ulasan kamu berhasil disimpan.');
     }
 }
