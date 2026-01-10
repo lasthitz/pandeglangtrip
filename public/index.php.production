@@ -5,7 +5,18 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// Production: Path ke folder Laravel (satu level di atas public_html)
+/*
+|--------------------------------------------------------------------------
+| Production Setup for Shared Hosting
+|--------------------------------------------------------------------------
+| Struktur folder di server:
+| /home/sistem18/pandeglangtrip.sisteminformasikotacerdas.id/ (Laravel root)
+| /home/sistem18/pandeglangtrip.sisteminformasikotacerdas.id/public_html/ (Web root)
+|
+| File ini harus ada di public_html/index.php
+*/
+
+// Path ke folder Laravel (satu level di atas public_html)
 $basePath = dirname(__DIR__);
 
 // Determine if the application is in maintenance mode...
