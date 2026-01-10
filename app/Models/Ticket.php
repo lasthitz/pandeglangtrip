@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Modules\Reviews\app\Models\Review;
 
 class Ticket extends Model
 {
     protected $fillable = [
+        'owner_id',
         'name',
         'price',
         'description',
@@ -24,6 +26,11 @@ class Ticket extends Model
         'is_active' => 'boolean',
         'price' => 'integer',
     ];
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
 
     public function scopeApproved(Builder $query): Builder
     {

@@ -6,12 +6,27 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
+    private function ownerId(): int
+{
+    return (int) Auth::id();
+}
+
+    private function assertOwner(Ticket $ticket): void
+    {
+        abort_unless((int) $ticket->owner_id === $this->ownerId(), 403);
+    }
+
     public function index()
     {
-        $tickets = Ticket::query()->latest()->paginate(10);
+        $tickets = Ticket::query()
+            ->where('owner_id', $this->ownerId())
+            ->latest()
+            ->paginate(10);
+
         return view('tickets::tickets.index', compact('tickets'));
     }
 
@@ -34,10 +49,11 @@ class TicketController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('tickets', 'public'); // tickets/xxx.ext
+            $imagePath = $request->file('image')->store('tickets', 'public');
         }
 
         Ticket::create([
+            'owner_id' => $this->ownerId(),
             'name' => $validated['name'],
             'price' => (int) $validated['price'],
             'description' => $validated['description'],
@@ -54,11 +70,14 @@ class TicketController extends Controller
 
     public function edit(Ticket $ticket)
     {
+        $this->assertOwner($ticket);
         return view('tickets::tickets.edit', compact('ticket'));
     }
 
     public function update(Request $request, Ticket $ticket)
     {
+        $this->assertOwner($ticket);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
@@ -84,7 +103,6 @@ class TicketController extends Controller
         $ticket->visit_date = $validated['visit_date'] ?? null;
         $ticket->is_active = (bool) ($validated['is_active'] ?? false);
 
-        // approval_status tetap apa adanya
         $ticket->save();
 
         return redirect()
@@ -94,6 +112,8 @@ class TicketController extends Controller
 
     public function destroy(Ticket $ticket)
     {
+        $this->assertOwner($ticket);
+
         if ($ticket->image_path && Storage::disk('public')->exists($ticket->image_path)) {
             Storage::disk('public')->delete($ticket->image_path);
         }

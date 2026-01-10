@@ -6,12 +6,26 @@ use App\Models\Tour;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class TourController extends Controller
 {
+    private function ownerId(): int
+{
+    return (int) Auth::id();
+}
+
+
+
+    private function assertOwner(Tour $tour): void
+    {
+        abort_unless((int) $tour->owner_id === $this->ownerId(), 403);
+    }
+
     public function index()
     {
         $tours = Tour::query()
+            ->where('owner_id', $this->ownerId())
             ->latest()
             ->paginate(10);
 
@@ -39,11 +53,11 @@ class TourController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            // storage/app/public/tours
             $imagePath = $request->file('image')->store('tours', 'public');
         }
 
         Tour::create([
+            'owner_id' => $this->ownerId(),
             'name' => $validated['name'],
             'price_per_person' => (int) $validated['price_per_person'],
             'description' => $validated['description'],
@@ -52,7 +66,7 @@ class TourController extends Controller
             'guide_name' => $validated['guide_name'] ?? null,
             'itinerary' => $validated['itinerary'] ?? null,
             'image_path' => $imagePath,
-            'approval_status' => 'PENDING', // wajib default
+            'approval_status' => 'PENDING',
             'is_active' => (bool) ($validated['is_active'] ?? false),
         ]);
 
@@ -63,11 +77,14 @@ class TourController extends Controller
 
     public function edit(Tour $tour)
     {
+        $this->assertOwner($tour);
         return view('tours::panel.tours.edit', compact('tour'));
     }
 
     public function update(Request $request, Tour $tour)
     {
+        $this->assertOwner($tour);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'price_per_person' => ['required', 'numeric', 'min:0'],
@@ -81,7 +98,6 @@ class TourController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // Hapus lama kalau ada
             if ($tour->image_path && Storage::disk('public')->exists($tour->image_path)) {
                 Storage::disk('public')->delete($tour->image_path);
             }
@@ -97,7 +113,6 @@ class TourController extends Controller
         $tour->itinerary = $validated['itinerary'] ?? null;
         $tour->is_active = (bool) ($validated['is_active'] ?? false);
 
-        // approval_status TIDAK diubah otomatis (sesuai blueprint)
         $tour->save();
 
         return redirect()
@@ -107,6 +122,8 @@ class TourController extends Controller
 
     public function destroy(Tour $tour)
     {
+        $this->assertOwner($tour);
+
         if ($tour->image_path && Storage::disk('public')->exists($tour->image_path)) {
             Storage::disk('public')->delete($tour->image_path);
         }
