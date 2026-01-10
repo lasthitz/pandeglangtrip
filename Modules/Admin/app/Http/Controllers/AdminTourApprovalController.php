@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Admin\app\Http\Controllers;
+namespace Modules\Admin\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tour;

@@ -7,7 +7,7 @@ use App\Models\Ticket;
 use App\Models\Tour;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Modules\Reviews\app\Models\Review;
+use Modules\Reviews\App\Models\Review;
 
 class ApiReviewController extends Controller
 {

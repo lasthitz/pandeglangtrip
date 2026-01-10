@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Tickets\app\Providers;
+namespace Modules\Tickets\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Reviews\app\Http\Controllers\ReviewController;
+use Modules\Reviews\App\Http\Controllers\ReviewController;
 
 Route::middleware(['web', 'auth'])->group(function () {
     // {type} = ticket | tour

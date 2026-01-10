@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Bookings\App\Http\Controllers\BookingController;
-use Modules\Bookings\app\Http\Controllers\DashboardController;
+use Modules\Bookings\App\Http\Controllers\DashboardController;
 use Modules\Bookings\App\Http\Controllers\Panel\BookingManagementController;
 
 /*

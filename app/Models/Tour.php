@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Modules\Reviews\app\Models\Review;
+use Modules\Reviews\App\Models\Review;
 
 class Tour extends Model
 {

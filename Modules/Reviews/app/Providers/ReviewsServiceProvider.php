@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Reviews\app\Providers;
+namespace Modules\Reviews\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

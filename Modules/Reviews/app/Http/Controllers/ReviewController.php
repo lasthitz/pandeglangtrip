@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Reviews\app\Http\Controllers;
+namespace Modules\Reviews\App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Ticket;
@@ -9,7 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Modules\Reviews\app\Models\Review;
+use Modules\Reviews\App\Models\Review;
 
 class ReviewController extends Controller
 {

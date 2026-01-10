@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Tours\app\Http\Controllers;
+namespace Modules\Tours\App\Http\Controllers;
 
 use App\Models\Tour;
 use Illuminate\Http\Request;

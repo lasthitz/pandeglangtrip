@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Tours\app\Http\Controllers\TourController;
+use Modules\Tours\App\Http\Controllers\TourController;
 
 Route::middleware('web')->group(function () {
     // Existing test route (biarin)

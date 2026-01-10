@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Tours\app\Providers;
+namespace Modules\Tours\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
