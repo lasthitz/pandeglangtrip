@@ -24,9 +24,9 @@ class AuthenticatedSessionController extends Controller
 
         // Default redirect by role
         $defaultTarget = match ($user->role ?? 'user') {
-            'admin'     => '/admin',
-            'pengelola' => '/panel',
-            default     => '/dashboard',
+            'admin'     => '/admin/tickets',
+            'pengelola' => '/panel/dashboard',
+            default     => '/',
         };
 
         /**

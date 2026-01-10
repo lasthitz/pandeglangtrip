@@ -6,7 +6,6 @@
 @section('content')
 <div class="mb-3">
   <h4 class="mb-0">Tambah Paket Tur</h4>
-  <div class="text-muted small">Status default: <span class="badge bg-warning">PENDING</span></div>
 </div>
 
 @if ($errors->any())
@@ -72,7 +71,7 @@
         <input class="form-check-input" type="checkbox" value="1" id="is_active" name="is_active"
           {{ old('is_active') ? 'checked' : '' }}>
         <label class="form-check-label" for="is_active">
-          Aktifkan (is_active)
+          Aktifkan
         </label>
       </div>
 

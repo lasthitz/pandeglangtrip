@@ -86,7 +86,6 @@
   <div class="card mb-3">
     <div class="card-body">
       <h2 class="h6 mb-2">Itinerary</h2>
-      <div class="text-muted small">Read-only</div>
       <div class="mt-2">{!! nl2br(e($tour->itinerary)) !!}</div>
     </div>
   </div>

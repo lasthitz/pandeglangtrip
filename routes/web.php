@@ -4,6 +4,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Account\AccountPasswordController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Account\AccountSettingsController;
+
+Route::middleware(['auth', 'user.only'])->group(function () {
+    Route::get('/account/settings', [AccountSettingsController::class, 'show'])
+        ->name('account.settings');
+});
+
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

@@ -8,7 +8,6 @@
   <div>
     <h1 class="h4 mb-1">Booking Masuk</h1>
     <div class="text-muted">
-      Hanya menampilkan booking dengan status <span class="badge bg-success">PAID</span>
     </div>
   </div>
 </div>
@@ -72,7 +71,7 @@
           @empty
             <tr>
               <td colspan="9" class="text-center text-muted py-4">
-                Belum ada booking berstatus <span class="badge bg-success">PAID</span>.
+                Belum ada booking masuk
               </td>
             </tr>
           @endforelse

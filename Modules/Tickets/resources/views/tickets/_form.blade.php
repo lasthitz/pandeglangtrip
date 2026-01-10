@@ -36,7 +36,6 @@
              {{ old('is_active', $ticket->is_active ?? false) ? 'checked' : '' }}>
       <label class="form-check-label" for="is_active">Tampilkan (aktif)</label>
     </div>
-    <div class="form-text">Public tetap hanya menampilkan <b>APPROVED</b> + <b>is_active=1</b>.</div>
   </div>
 
   <div class="col-12">
