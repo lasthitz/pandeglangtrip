@@ -8,9 +8,6 @@
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
   <div>
     <h1 class="h4 mb-1">Approval Konten — Tours</h1>
-    <div class="text-muted small">
-      Default menampilkan <b>PENDING</b>. Approve/Reject hanya mengubah <code>approval_status</code> (tidak menyentuh <code>is_active</code>).
-    </div>
   </div>
 
   <div class="d-flex flex-wrap gap-2">

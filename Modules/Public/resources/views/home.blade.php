@@ -6,7 +6,7 @@
 <div class="container py-4">
     <div class="mb-3">
         <h1 class="h4 mb-1">Jelajahi PandeglangTrip</h1>
-        <p class="text-secondary mb-0">Listing ticket & tour yang sudah tersedia untuk publik.</p>
+        <p class="text-secondary mb-0">Temukan tiket wisata dan paket tur terbaik di Pandeglang.</p>
     </div>
 
     {{-- TICKETS --}}

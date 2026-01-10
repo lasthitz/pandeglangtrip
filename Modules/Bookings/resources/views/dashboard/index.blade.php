@@ -6,7 +6,6 @@
 @section('content')
 <div class="mb-3">
     <h1 class="h4 mb-1">Dashboard KPI</h1>
-    <div class="text-muted small">Ringkasan data (read-only)</div>
 </div>
 
 <div class="row g-3">

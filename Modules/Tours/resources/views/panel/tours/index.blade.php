@@ -7,7 +7,6 @@
 <div class="d-flex align-items-center justify-content-between mb-3">
   <div>
     <h4 class="mb-0">Paket Tur</h4>
-    <div class="text-muted small">CRUD Paket Tur (guide + itinerary + 1 gambar)</div>
   </div>
 
   <a href="{{ route('panel.tours.create') }}" class="btn btn-primary btn-sm">

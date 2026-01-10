@@ -165,7 +165,6 @@
 <footer class="border-top bg-body-tertiary">
     <div class="container py-3 small text-muted d-flex justify-content-between align-items-center">
         <span>© {{ date('Y') }} PandeglangTrip</span>
-        <span class="d-none d-sm-inline">Bootstrap 5.3</span>
     </div>
 </footer>
 
