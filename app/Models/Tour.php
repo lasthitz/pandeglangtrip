@@ -51,4 +51,10 @@ class Tour extends Model
     {
         return $this->morphMany(Review::class, 'reviewable')->latest();
     }
+
+    // Bookings (polymorphic)
+    public function bookings(): MorphMany
+    {
+        return $this->morphMany(\App\Models\Booking::class, 'bookable');
+    }
 }

@@ -6,7 +6,7 @@
   "priority": 0,
   "providers": [
     "Modules\\Admin\\app\\Providers\\AdminServiceProvider",
-    "Modules\\Admin\\App\\Providers\\RouteServiceProvider"
+    "Modules\\Admin\\app\\Providers\\RouteServiceProvider"
   ],
   "files": []
 }
